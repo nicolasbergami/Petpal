@@ -10,15 +10,15 @@ const getMascotas = async (req, res) => {
 };
 
 const createMascota = async (req, res) => {
+  const { name, type, breed, age, user_id, profile_image } = req.body;
   try {
-    const { name, type, breed, age, user_id } = req.body;
     if (!name || !type || !user_id) {
       return res.status(400).json({ error: 'Name, type, and user_id are required' });
     }
-    const newMascota = await Mascota.create({ name, type, breed, age, user_id });
+    const newMascota = await Mascota.create({ name, type, breed, age, user_id, profile_image });
     res.status(201).json(newMascota);
   } catch (error) {
-    res.status(500).json({ error: error.message }); // Mejorar el mensaje de error
+    res.status(500).json({ error: error.message });
   }
 };
 

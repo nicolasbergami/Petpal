@@ -9,10 +9,25 @@ const getUsuarios = async (req, res) => {
   }
 };
 
+
 const createUser = async (req, res) => {
-  const { name, email, password, role } = req.body;
+  const { name, email, password, role, service_type,profile_image } = req.body; // Agregar service_type
+
   try {
-    const newUser = await Usuario.create({ name, email, password, role });
+    // Validar si el rol es 'caregiver' y si es necesario el service_type
+    if (role === 'caregiver' && !service_type) {
+      return res.status(400).json({ error: 'Service type is required for caregivers' });
+    }
+
+    const newUser = await Usuario.create({
+      name,
+      email,
+      password,
+      role,
+      service_type: role === 'caregiver' ? service_type : null, // Si no es caregiver, service_type será null
+      profile_image
+    });
+
     res.status(201).json(newUser);
   } catch (error) {
     res.status(500).json({ error: error.message });
